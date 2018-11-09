@@ -16,8 +16,8 @@ cutoff_freq = [5000/Fs,10000/Fs];
 window_type = 'hn' // ハン窓
 
 //フィルタ生成＆適用
-[h,hm,fr]=wfir('bp', filter_order, cutoff_freq, window_type,[1 0]);
-output=convol(s,h);
+[wft,wfm,fr]=wfir('bp', filter_order, cutoff_freq, window_type,[1 0]);
+output=convol(input,wft);
 output = output(filter_order:$); // 頭の(次数-1)サンプルは正しく出力されないので捨てる
 
 // ファイル出力
