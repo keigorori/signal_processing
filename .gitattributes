@@ -1,0 +1,17 @@
+﻿# デフォルト動作は改行変換しないがdiffは取る
+*           -text
+
+# Shell
+*.bat       text eol=crlf
+*.sh        text eol=lf
+
+# Sources
+*.sci       text
+*.sce       text
+
+# Data
+*.xml        text
+*.json       text
+
+# Binary
+*.wav        binary
