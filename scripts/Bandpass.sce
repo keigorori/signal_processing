@@ -14,7 +14,7 @@ outputpath = './result/bandpass/bandpass.wav';
 [input, samplingRate, bits] = wavread(inputPath);  // ファイル読み込み
 
 // フィルタ適用
-[output, freqResponse, freqGrid] = Bandpass(input, samplingRate, [1000, 8000], 2048);
+[output, freqResponse, freqGrid] = Bandpass(input, samplingRate, [1000, 8000], -60, 50);
 
 // ファイル出力
 mkdir('result/bandpass');
