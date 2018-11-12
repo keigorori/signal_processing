@@ -4,7 +4,7 @@
 function PlotFrequencyResponse(frequencyResponse, frequencyGrid, handle, style)
 
 // デシベル変換
-fr_dB = 10*log10(frequencyResponse);
+fr_dB = 20*log10(frequencyResponse);
 
 // プロット
 scf(handle);
