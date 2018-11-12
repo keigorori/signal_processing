@@ -1,12 +1,12 @@
 ////////////////////////
 // 周波数のプロット
 ////////////////////////
-function PlotFrequency(signal, samplingRate, handle, style)
+function PlotFrequency(signal, samplingRate, windowType, handle, style)
 // 波形サンプル数
 N = size(signal, 'c');
 
 // フーリエ変換
-win = window('hm', N);
+win = window(windowType, N);
 FFT = abs( fft(signal.*win)/sqrt(N) ); // 振幅をとる
 FFT_db = 10*log10(FFT);
 
