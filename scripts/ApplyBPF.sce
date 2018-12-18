@@ -2,7 +2,7 @@
 // wavファイルにバンドパスフィルタを掛けた結果をファイル出力
 ///////////////////////////////////////////////////////////
 clear();
-cd(get_absolute_file_path('Bandpass.sce'));// ディレクトリ変更
+cd(get_absolute_file_path('ApplyBPF.sce'));// ディレクトリ変更
 exec( '../filters/Bandpass.sci');
 exec( '../plots/PlotFrequency.sci');
 exec( '../plots/PlotFrequencyResponse.sci');
@@ -12,19 +12,32 @@ inputPath = '../data/';
 inputFilename = 'white_10sec_1ch_16bit_48k.wav';
 [input, samplingRate, bits] = wavread(inputPath + inputFilename);  // ファイル読み込み
 
-// 中心周波数から両端のカットオフ周波数を求める
-band1_n = 1                         // 1/n oct.バンド
-oct1_n = nthroot(2, 2*band1_n);     // 2の(2n)乗根
-centerHz = 3000;                    // 中心周波数
-cutoffLowHz = centerHz / oct1_n;
-cutoffHighHz = centerHz * oct1_n;
+// 周波数の指定方法
+cutoffMode = 'high_low'
+if cutoffMode == 'center_band' then
+    // 中心周波数から両端のカットオフ周波数を求める
+    centerHz        = 3000;                    // 中心周波数
+    band1_n         = 1                        // 1/n oct.バンド
+    oct1_n          = nthroot(2, 2*band1_n);   // 2の(2n)乗根
+    cutoffLowHz     = centerHz / oct1_n;
+    cutoffHighHz    = centerHz * oct1_n;
+elseif cutoffMode == 'high_low' then
+    cutoffLowHz     = 1000;
+    cutoffHighHz    = 2000;
+end
 
 // フィルタ適用
-[output, freqResponse, freqGrid] = Bandpass(input, samplingRate, [cutoffLowHz, cutoffHighHz], -60, 10);
+[output, freqResponse, freqGrid] = Bandpass(input, samplingRate, cutoffLowHz, cutoffHighHz, -60, 10);
 
 // ファイル出力
 outputpath = './result/bandpass/';
-outputFilename = 'bandpass_' + 'c' + string(centerHz) + '_frac1_' + string(band1_n) + 'oct' + '.wav';
+outputFilename = 'bandpass.wav';
+if cutoffMode == 'center_band' then
+    outputFilename = 'bandpass_' + 'c' + string(centerHz) + '_frac1_' + string(band1_n) + 'oct' + '.wav';
+elseif cutoffMode == 'high_low' then
+    outputFilename = 'bandpass_' + 'L' + string(cutoffLowHz) + '_H' + string(cutoffHighHz) + '.wav';
+end
+
 mkdir(outputpath);
 savewave(outputpath + outputFilename, output, samplingRate, bits);
 

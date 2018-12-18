@@ -6,7 +6,7 @@
 // stansitionBand:Hz
 ////////////////////////
 
-function [output, wfm, fr] = Bandpass(input, samplingRate, cutoffFreq, stopBandAttenuation, transitionBand)
+function [output, wfm, fr] = Bandpass(input, samplingRate, cutoffFreqLow, cutoffFreqHigh, stopBandAttenuation, transitionBand)
 // 減衰量からカイザー窓のパラメータを求める
 // ひとまず-50dBより大きいものだけ対応
 alpha = 0.1102*(-stopBandAttenuation-8.7);
@@ -18,11 +18,11 @@ filterOrder = ceil(filterOrder);
 
 N = size( input, 'c');          // サンプル数
 windowType = 'kr';              // カイザー窓
-windowParameter = [alpha 0];        // 
-cutoffFreq = cutoffFreq/samplingRate; // [0, 0.5]の係数に変換
+windowParameter = [alpha 0];
+cf = [cutoffFreqLow/samplingRate, cutoffFreqHigh/samplingRate]; // [0, 0.5]の係数に変換
 
 // フィルタ生成＆適用(窓関数法)
-[wft, wfm, fr] = wfir('bp', filterOrder, cutoffFreq, windowType, windowParameter);
+[wft, wfm, fr] = wfir('bp', filterOrder, cf, windowType, windowParameter);
 output=convol( input, wft);
 output = output(filterOrder:$); // 頭の(次数-1)サンプルは正しく出力されないので捨てる
 
