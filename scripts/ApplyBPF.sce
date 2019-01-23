@@ -9,7 +9,7 @@ exec( '../plots/PlotFrequencyResponse.sci');
 
 // ファイル入力
 inputPath = '../data/';
-inputFilename = 'white_10sec_1ch_16bit_48k.wav';
+inputFilename = 'click_1ch_16bit_48k.wav';
 [input, samplingRate, bits] = wavread(inputPath + inputFilename);  // ファイル読み込み
 
 // 周波数の指定方法
@@ -22,8 +22,8 @@ if cutoffMode == 'center_band' then
     cutoffLowHz     = centerHz / oct1_n;
     cutoffHighHz    = centerHz * oct1_n;
 elseif cutoffMode == 'high_low' then
-    cutoffLowHz     = 1000;
-    cutoffHighHz    = 2000;
+    cutoffLowHz     = 500;
+    cutoffHighHz    = 3000;
 end
 
 // フィルタ適用
@@ -31,12 +31,13 @@ end
 
 // ファイル出力
 outputpath = './result/bandpass/';
-outputFilename = 'bandpass.wav';
+outputFilename = 'BPF.wav';
 if cutoffMode == 'center_band' then
-    outputFilename = 'bandpass_' + 'c' + string(centerHz) + '_frac1_' + string(band1_n) + 'oct' + '.wav';
+    outputFilename = 'BPF_' + 'c' + string(centerHz) + '_frac1_' + string(band1_n) + 'oct' + '.wav';
 elseif cutoffMode == 'high_low' then
-    outputFilename = 'bandpass_' + 'L' + string(cutoffLowHz) + '_H' + string(cutoffHighHz) + '.wav';
+    outputFilename = 'BPF_' + 'L' + string(cutoffLowHz) + '_H' + string(cutoffHighHz) + '.wav';
 end
+outputFilename = basename(inputFilename) + '_' + outputFilename;
 
 mkdir(outputpath);
 savewave(outputpath + outputFilename, output, samplingRate, bits);

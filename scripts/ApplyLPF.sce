@@ -9,18 +9,18 @@ exec( '../plots/PlotFrequencyResponse.sci');
 
 // ファイル入力
 inputPath = '../data/';
-inputFilename = 'white_10sec_1ch_16bit_48k.wav';
+inputFilename = 'click_1ch_16bit_48k.wav';
 [input, samplingRate, bits] = wavread(inputPath + inputFilename);  // ファイル読み込み
 
 // カットオフ周波数
-cutoffHz = 3000;
+cutoffHz = 1500;
 
 // フィルタ適用
 [output, freqResponse, freqGrid] = Lowpass(input, samplingRate, cutoffHz, -60, 10);
 
 // ファイル出力
 outputpath = './result/lowpass/';
-outputFilename = 'lowpass_' + string(cutoffHz) + '.wav';
+outputFilename = basename(inputFilename) + '_LPF' + string(cutoffHz) + '.wav';
 mkdir(outputpath);
 savewave(outputpath + outputFilename, output, samplingRate, bits);
 
